@@ -1,11 +1,29 @@
 #include<stdio.h>
 void compare(char [], char []);
+struct dat
+{
+ 	   int size;
+ 	   int address;
+ 	   int data[1000];
+ 	   
+ 	   void display()
+ 	   {
+	   		int i;
+	   		printf("\nThe address is : %04X \n Size = %02X \n DATA : \n", address, size);
+	   		for(i=0;i<size;++i)
+	   		{
+			 				   printf("%02X", data[i]);
+			 				   }
+			 				   printf("\n");
+	   		}
+ 	   
+ 	   }one[100], two[100];
 struct intel_hex_record
 {
  	   int size;
  	   int address;
- 	   int add1;
- 	   int add2;
+ 	   int add1;// used for check sum
+ 	   int add2;// used for check sum 
 	   int record_type;
  	   int data[256];
  	   int check_sum;
@@ -151,6 +169,7 @@ void compare(char f1[], char f2[])
 			   }
 			  
    }
+   int rec_file1 = i;
    i=0;
    fclose(file1);
     FILE *file2 = fopen(f2,"r");
@@ -187,7 +206,47 @@ void compare(char f1[], char f2[])
 			   							 //printf("\n END OF FILE ");
 			   							 break;
 			   }
+			   
 			  
    }
+   int rec_file2 = i;
+   int k=0, l=0;
+   for(i=0;i<rec_file1;++i)
+   {
+   						   j=i+1;
+   						   
+							  if(record[i].address == -1)
+   						   continue;
+   						   
+   						   one[k].address = record[i].address;
+   						   
+							  for(l=0;l<record[i].size;++l)
+   						   {
+						   								one[k].data[l] = record[i].data[l];
+						   								}
+						   	int f = l;							
+   						   while(j<rec_file1)
+   						   {
+						   					 if(record[i].address == record[j].address)
+						   					 {
+											  					  for(l=0;l<record[j].size;++l)
+											  					  {
+																   				one[k].data[f++] = record[j].data[l];			   
+										   							   }
+											  				record[j].address = -1;
+															 	  
+											
+						  					  }
+						  					  j++;
+											
+											  					  
+			   					 }
+			   					 
+			   					 				   one[k].size = f;
+						  					  one[k].display();
+						  					  	k++;
+   }
+   
+   
     	
 }	
