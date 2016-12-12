@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 		  					  case 'c' :
 							  	   	   	if(argc == 4)
 							  	   	   	{
-										 		printf("\nComparing the 2 hex files");
+										 	//	printf("\nComparing the 2 hex files");
 										 		compare(argv[2],argv[3]);
 										 		   	 }
 										else
@@ -134,7 +134,7 @@ void compare(char f1[], char f2[])
  	 int Line_Feed, c1, c2, c3, c4, i=0, j=0 ;
   	 char c;
   	 
-   printf("FILE name : %s \n", f2 );
+  // printf("FILE name : %s \n", f2 );
  	 while(1)
  	 {
 	  		c = fgetc(file1);
@@ -158,8 +158,8 @@ void compare(char f1[], char f2[])
 			Line_Feed = fgetc(file1);	    
 		/*		    printf("\n RECORD NUMBER : %i ", i+1);
 	  		record[i].display();
-		*/			printf("\n Regular Format : \n ");
-			record[i].print_hex_format();		
+		*/	//		printf("\n Regular Format : \n ");
+		//	record[i].print_hex_format();		
 			
 			 i++;  
 			  if(Line_Feed==0xFFFFFFFF) // (record[i-1].record_type == 1)||
@@ -173,7 +173,7 @@ void compare(char f1[], char f2[])
    i=0;
    fclose(file1);
     FILE *file2 = fopen(f2,"r");
-   printf("\nFILE name : %s \n", f2 );
+  // printf("\nFILE name : %s \n", f2 );
     while(1)
  	 {
 	  		c = fgetc(file2);
@@ -197,8 +197,8 @@ void compare(char f1[], char f2[])
 			Line_Feed = fgetc(file2);	    
 		/*		    printf("\n RECORD NUMBER : %i ", i+1);
 	  		record[i].display();
-			*/		printf("\n Regular Format : \n ");
-			new_record[i].print_hex_format();		
+			*/	//	printf("\n Regular Format : \n ");
+		//	new_record[i].print_hex_format();		
 			
 			 i++;  
 			  if(Line_Feed==0xFFFFFFFF) // (record[i-1].record_type == 1)||
@@ -245,13 +245,13 @@ void compare(char f1[], char f2[])
 			   					 }
 			   					 
 				 				              one[k].size = f;
-						  					  one[k].display();
+						  				//	  one[k].display();
 					  					  	  k++;
    }
    int size_one = k;
    k=0;
    l=0;
-    printf("\nNumber of record for file 2 : %i \n", rec_file2);
+   // printf("\nNumber of record for file 2 : %i \n", rec_file2);
       for(i=0;i<rec_file2;++i)
    {
    						   j=i+1;
@@ -285,7 +285,7 @@ void compare(char f1[], char f2[])
 			   					 }
 			   					 
 				 				              two[k].size = f;
-						  					  two[k].display();
+						  				//	  two[k].display();
 					  					  	  k++;
    }
    int size_two = k;
