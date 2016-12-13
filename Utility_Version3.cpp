@@ -122,6 +122,7 @@ int main(int argc, char *argv[])
  	{
 	 		printf("Usage : %s [-c file1 file2][-y file1][-r file1]", argv[0]);
 		 // c -> compare the 2 hex files y -> cyclic redundancy check of 1 hex file , r-> Simply read the given hex file 
+			printf("\nOptions : ");
 			printf("\n\n[-c] \t - \t Compare 2 Intel Hex Binary files. \n");
 			printf("\n\n[-y] \t - \t Calculate the Cyclic Redundancy Check of one Intel Hex Binary file. \n");
 			printf("\n\n[-r] \t - \t Verify whether a file is in Intel Hex Binary File format.  \n");
@@ -647,4 +648,5 @@ void returnbin(int x[], int size)
 	int c1 = crc[0]*2*2*2 + crc[1]*2*2 + crc[2]*2 + crc[3];
 	int c2 = crc[4]*2*2*2 + crc[5]*2*2 + crc[6]*2 + crc[7];
 	printf("\n %01X%01X",c1,c2);
+	
 }
