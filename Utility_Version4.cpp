@@ -8,61 +8,59 @@ void convert_to_binary(char []);
 void convert_to_hex(char [], int);
 int comp_data[10000], bin_data[8000];
 int flag =0;
-int checksum(int dat[], int size, int cs)
+int checksum(int dat[], int size, int cs) // calculate the check_sum value of the dat[] array and compare with cs(existing checksum)
 {
+	int i, p1, p2, check_sum;
  	int sum =0;
- 	int i;
+ 	
  	for(i=0;i<size;++i)
  	{
 	 	   sum += dat[i];
     }
-	int p1,p2;
+	
 	p1= sum%16;
 	sum = sum/16;
 	p2 = sum%16;
-	
-	int check_sum = 255 - (p2*16 + p1 ) + 1;
+	check_sum = 255 - (p2*16 + p1 ) + 1;
 	p1 = check_sum %16;
 	check_sum = check_sum/16;
 	p2 = check_sum %16;
-	 check_sum = p2 * 16 + p1;
+	check_sum = p2 * 16 + p1;
 	 
-	 if(check_sum == cs)
-	 return 0; 				   
+		if(check_sum == cs) // if the calculated checksum and the existing check sum are equal , return 0
+			return 0; 				   
  	
  	printf("\nThe check sum is %i while in the file it is %i \n Record is corrupt \n", check_sum, cs );
  	
- 	return 1;
- 	}
-int ret_checksum(int dat[], int size)
+ 	return 1; // if the calculated checksum and the existing check sum are not equal, return 1
+}
+int ret_checksum(int dat[], int size) // returns the check sum of the dat[] array 
 {
-	
+	int i, p1, p2,check_sum;
 	int sum =0;
- 	int i;
+ 	
  	for(i=0;i<size;++i)
  	{
 	 	   sum += dat[i];
     }
-	//printf("Func - checksum - value of sum = %i", sum); 				   
-	int p1,p2;
+	
 	p1= sum%16;
 	sum = sum/16;
 	p2 = sum%16;
-	
-	int check_sum = 255 - (p2*16 + p1 ) + 1;
+	check_sum = 255 - (p2*16 + p1 ) + 1;
 	p1 = check_sum %16;
 	check_sum = check_sum/16;
 	p2 = check_sum %16;
-	 check_sum = p2 * 16 + p1;
+	check_sum = p2 * 16 + p1;
 	 
-	 return check_sum;
+	return check_sum;
 }	
 struct student
 {
  	   int stud_number;
  	   char name[100];
  	   int age;
- 	   }s[100];
+}s[100];
 
 struct dat
 {
@@ -74,14 +72,14 @@ struct dat
  	   {
 	   		int i;
 	   		printf("\nThe address is : %04X \n Size = %02X \n DATA : \n", address, size);
-	   		for(i=0;i<size;++i)
-	   		{
-			 				   printf("%02X", data[i]);
-	    	   }
-		     printf("\n");
-	   		}
+				for(i=0;i<size;++i)
+				{
+					printf("%02X", data[i]);
+				}
+			printf("\n");
+	   	}
  	   
- 	   }one[100], two[100];
+}one[100], two[100];
 struct intel_hex_record
 {
  	   int size;
@@ -98,16 +96,16 @@ struct intel_hex_record
 	   		printf("\n SIZE : %02X \n ADDRESS : %04X \n RECORD TYPE : %02X \n DATA : \n ", size, address, record_type);
 	   		for(i=0;i<size;++i)
 	   		{
-			 				   printf(" %02X ",data[i]);
-	     	   }
-			 printf("\n CHECK SUM : %02X", check_sum);				   
-  		}
-  		void print_hex_format(int i=0)
+	    		  printf(" %02X ",data[i]);
+	        }
+			printf("\n CHECK SUM : %02X", check_sum);				   
+    	}
+  		void print_hex_format()
   		{
-		 	 
+		 	int i;
 		 	printf(":%02X%04X%02X", size, address, record_type);
-			  for(;i<size;++i)
-			  				  printf("%02X", data[i]);
+		    for(i=0;i<size;++i)
+				  printf("%02X", data[i]);
 			printf("%02X", check_sum);  				  
         }
         void print_data()
@@ -115,15 +113,15 @@ struct intel_hex_record
 		 	 int i;
 		 	 for(i=0;i<size;++i)
 		 	 {
-			  					printf("%02X", data[i]);
-			  					}
-		 	 }
+ 					printf("%02X", data[i]);
+   			 }
+	    }
         
 }record[100], new_record[100];
 
 char get_c(char x[])
 {
- 	 return x[1];
+ 	return x[1];
 }
 int hex(char c)
 {
@@ -132,11 +130,9 @@ int hex(char c)
  	res = c - '0';
  	else if(c >= 'A' && c <= 'F')
  	res = c - 'A' + 10;
- 	
- 	
+
  	return res;
 }
-
 
 int main(int argc, char *argv[])
 {
@@ -270,27 +266,28 @@ void compare(char f1[], char f2[])
     FILE *file2 = fopen(f2,"r");
     while(1)
  	 {
-	  		c = fgetc(file2);
-			new_record[i].size = hex(fgetc(file2))*16 + hex(fgetc(file2));
+	  		c = fgetc(file2); // get the ':' character
 			
-			c1 = hex(fgetc(file2));
+			new_record[i].size = hex(fgetc(file2))*16 + hex(fgetc(file2)); // Record size(byte count) is denoted by 2 Hex Digits
+			
+			c1 = hex(fgetc(file2));  // Address field is denoted by 4 Hex Digits
 			c2 = hex(fgetc(file2));
 		  	c3 = hex(fgetc(file2));
 		   	c4 = hex(fgetc(file2));  			  
 	  		 
- 	        new_record[i].address = c1 * 16 * 16 * 16 + c2 * 16 * 16  + c3 * 16 + c4;  
-	  		new_record[i].add1 = c1*16 + c2;
-	  		new_record[i].add2 = c3*16 + c4;
-	  		new_record[i].record_type = hex(fgetc(file2))*16 + hex(fgetc(file2));
+ 	        new_record[i].address = c1 * 16 * 16 * 16 + c2 * 16 * 16  + c3 * 16 + c4;  // Hex to Decimal   
+	  		new_record[i].add1 = c1*16 + c2; // used for check sum
+	  		new_record[i].add2 = c3*16 + c4; // used for check sum
+	  		new_record[i].record_type = hex(fgetc(file2))*16 + hex(fgetc(file2)); // record type is denoted by 2 hex digits
 			
 				for(j=0;j<new_record[i].size;++j)
 					{
 					 		new_record[i].data[j] = hex(fgetc(file2)) * 16 + hex(fgetc(file2));			   	 
 				    }
-			new_record[i].check_sum = hex(fgetc(file2))*16 + hex(fgetc(file2));
-			Line_Feed = fgetc(file2);	    
+			new_record[i].check_sum = hex(fgetc(file2))*16 + hex(fgetc(file2)); // check sum is denoted by 2 hex digits
+			Line_Feed = fgetc(file2); // Line is present at the end of each record	    
 			i++;  
-				if(Line_Feed==0xFFFFFFFF) 
+				if(Line_Feed==0xFFFFFFFF) // Represents the end of File
 							break;
 
    }
@@ -301,33 +298,28 @@ void compare(char f1[], char f2[])
    {
    						   j=i+1;
    						   
-							  if(record[i].address == -1)
+						  if(record[i].address == -1)
    						   continue;
    						   
    						   one[k].address = record[i].address;
    						   
-							  for(l=0;l<record[i].size;++l)
+						  for(l=0;l<record[i].size;++l)
    						   {
-						   								one[k].data[l] = record[i].data[l];
-						   								}
+		  								one[k].data[l] = record[i].data[l];
+							}
 						   	int f = l;							
    						   while(j<rec_file1)
    						   {
-						   					 if(record[i].address == record[j].address)
-						   					 {
-											  					  for(l=0;l<record[j].size;++l)
-											  					  {
-																   				one[k].data[f++] = record[j].data[l];			   
-										   						   }
-											  				record[j].address = -1;
-															 	  
-											
-						  					  }
-						  					  
-												j++;
-											
-											  					  
-			   					 }
+						   				 if(record[i].address == record[j].address)
+						   				 {
+								  					  for(l=0;l<record[j].size;++l)
+								  					  {
+												   				one[k].data[f++] = record[j].data[l];			   
+													   }
+												record[j].address = -1;
+						  				  }
+								j++;						  					  
+			   				}
 			   					 
 				 				              one[k].size = f;
 					  					  	  k++;
@@ -337,41 +329,34 @@ void compare(char f1[], char f2[])
    l=0;
   
       for(i=0;i<rec_file2;++i)
-   {
+	  {
    						   j=i+1;
    						   
-							  if(new_record[i].address == -1)
+						   if(new_record[i].address == -1)
    						   continue;
    						   
    						   two[k].address = new_record[i].address;
    						   
-							  for(l=0;l<new_record[i].size;++l)
+	    				   for(l=0;l<new_record[i].size;++l)
    						   {
-						   								two[k].data[l] = new_record[i].data[l];
-						   								}
+						   		two[k].data[l] = new_record[i].data[l];
+							}
 						   	int f = l;							
    						   while(j<rec_file2)
    						   {
 						   					 if(new_record[i].address == new_record[j].address)
 						   					 {
-											  					  for(l=0;l<new_record[j].size;++l)
-											  					  {
-																   				two[k].data[f++] = new_record[j].data[l];			   
-										   							   }
-											  				new_record[j].address = -1;
-															 	  
-											
+											  				for(l=0;l<new_record[j].size;++l)
+											  			    {
+															  			two[k].data[f++] = new_record[j].data[l];			   
+										   				     }
+											  	    new_record[j].address = -1;											
 						  					  }
-						  					  
-												j++;
-											
-											  					  
-			   					 }
-			   					 
-				 				              two[k].size = f;
-						  				//	  two[k].display();
+								j++;			  					  
+			   				}	 
+				 				              two[k].size = f;			
 					  					  	  k++;
-   }
+       }
    int size_two = k;
    int flag = 0;
    int m =0;
@@ -446,7 +431,7 @@ void verify(char file[])
     
 	   while(flag==0)
        {
-			   		c = fgetc(nf);
+			   		c = fgetc(nf); // Hex records start with ":" character 
 			   		
 				    if(c!=':')
 			   		{
@@ -454,35 +439,32 @@ void verify(char file[])
 						break;	  
 			 		}
  		
-					bc = hex(fgetc(nf)) * 16 + hex(fgetc(nf));
-					check[0] = bc; 	
+					bc = hex(fgetc(nf)) * 16 + hex(fgetc(nf));  // Record data size (byte count) is denoted by 2 Hex digits
+					check[0] = bc; 	// Used for checksum calculation
 					if(flag == 1)
 		 			break;	
 					
-				 	c1 = hex(fgetc(nf));
+				 	c1 = hex(fgetc(nf)); // Record address is denoted by 4 Hex digits
 				 	c2 = hex(fgetc(nf));
 				  	c3 = hex(fgetc(nf));
 				   	c4 = hex(fgetc(nf));
-					check[1] = c1*16 + c2;
-					check[2] = c3*16 + c4;
-					add = c1 * 16 * 16 * 16 + c2 * 16 * 16  + c3 * 16 + c4;		
+					check[1] = c1*16 + c2; // Used for check Sum
+					check[2] = c3*16 + c4; // Used for check Sum
+					add = c1 * 16 * 16 * 16 + c2 * 16 * 16  + c3 * 16 + c4; // Calculate the address values from 4 Hex digits		
 					if(flag == 1)
 					break;
-					
 					rt = hex(fgetc(nf))*16 + hex(fgetc(nf));
-					
-					check[3] = rt;
-					
+					check[3] = rt; // Used for checksum calculation
 					if(rt>=6||rt<0)
 					flag=1;
-					
+	
 					if(flag == 1)
 					break;
 					
 					for(j=0;j<bc;++j)
 					{
 					 		data[j] = hex(fgetc(nf)) * 16 + hex(fgetc(nf));	
-							   check[4+j] = data[j];	 
+							   check[4+j] = data[j];  // Used for checksum calculation
 				    }
 					
 					cs = hex(fgetc(nf))*16 + hex(fgetc(nf));
@@ -499,7 +481,7 @@ void verify(char file[])
 				 					  break;
 				 			  }
 				
-		  					 lf = fgetc(nf);
+								lf = fgetc(nf);
 					  
 	     	  			  	  if(lf==0xFFFFFFFF)
 			  				  {
@@ -741,7 +723,7 @@ void convert_to_hex(char filename[], int bc) // filename and byte count (16bytes
 	{
 			printf(":%02X%04X%02X",size,address,0);
 			check[0]= size;
-			temp  = address; // converting address to 4 Digit Hex values and divind it into 2 bytes for calculation required for checksum
+			temp  = address; // converting address to 4 Digit Hex values and dividE it into 2 bytes for calculation required for checksum
 			ad1 = temp%16;     
 			temp=temp/16;
 			ad2 = temp%16;
