@@ -135,7 +135,7 @@ int hex(char c)
  	return res;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char *argv[]) // argc -> argument count and argv -> argument values
 {
  	if(argc == 1)
  	{
@@ -390,7 +390,7 @@ void compare(char f1[], char f2[])
 									   	   			   	   break;
 													    }			  
 												 }
-												 
+					
 						  						if(flag==-1)
 						  						break;
 	  						}
@@ -606,7 +606,6 @@ void returnbin(int x[], int size)
 			  				 crc[j] = crc[j+1];
 			  				 else
 			  				 crc[j] = bin_data[i+j+1];
-			  				 
 			  }
 	      } 
 							
@@ -746,16 +745,16 @@ void convert_to_hex(char filename[], int bc) // filename and byte count (16bytes
 	}
 }
 
-void convert(char file[], char s[])
+void convert(char file[], char s[]) // convert the Intel Hex file to another Intel hex file with max byte size given by s 
 {
- 	  int size;
+ 	 int size;
 	 FILE *nf = fopen(file,"r");
 	 char c;
 	 int comp_data[1000], check[267];
 	 int i, j, k, c1, c2, c3, c4, add, rt, cs, bc, lf, j1=0,l=0, m=0, address =0;;
 	 int tot, temp, ad1, ad2, ad3, ad4;
 
-	if(strlen(s)==1)
+	if(strlen(s)==1) // converting string s to and integer
  	  size = s[0] - '0';
  	  else if(strlen(s)==2)
 	  size = (s[0] - '0')*10 + (s[1]-'0');
@@ -793,12 +792,11 @@ void convert(char file[], char s[])
 	   				   break;
 			        }
 	   }
-	   tot = j1; // The total number of bytes of data present in the input file
+	   tot = j1; // The total number of bytes of data(ONLY CONTENT) present in the input file
 	   while(tot>=size)
 	   {
             printf(":%02X%04X%02X",size,address,0);
 	   	    check[0]= size;
-			check[1]= address;
 			temp = address; // converting the address to 4 Digit Hex values and divide it into 2 bytes for calculation required for checksum
 			ad1  = temp%16;
 			temp = temp/16;
@@ -820,11 +818,10 @@ void convert(char file[], char s[])
 		    printf("%02X\n",ret_checksum(check,4+size));
 		    tot-=size;
 	   }
-	   if(tot>0)
+	   if(tot>0)  // The data which is less the max size required
 	   {
  		    printf(":%02X%04X%02X",tot,address,0);
-	   	    check[0]= size;
-			check[1]= address;
+	   	    check[0]= tot;
 			temp = address; // converting the address to 4 Digit Hex values and divide it into 2 bytes for calculation required for checksum
 			ad1  = temp%16;
 			temp = temp/16;
@@ -835,7 +832,7 @@ void convert(char file[], char s[])
 			ad4  = temp%16;
 			check[1] = ad4*16 + ad3; // used for check sum
 			check[2] = ad2*16 + ad1; // used for check sum
-			check[3]= 0; // Record Type is set to 0 as all the records contain on data
+			check[3] = 0; // Record Type is set to 0 as all the records contain on data
 			address++;	// Incremental addresses are used	     
    			for(l=0;l<tot;++l)
  		    {
@@ -843,6 +840,6 @@ void convert(char file[], char s[])
 			   	check[4+l] = comp_data[l + m]; 
 		    }
 		    m+=size;
-		    printf("%02X",ret_checksum(check,4+size));
+		    printf("%02X",ret_checksum(check,4+tot));
 		}	    
 }
