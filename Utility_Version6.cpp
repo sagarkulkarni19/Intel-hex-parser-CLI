@@ -140,7 +140,7 @@ int main(int argc, char *argv[]) // argc -> argument count and argv -> argument 
 {
  	if(argc == 1)
  	{
-	 		printf("\n\nUsage : %s [-c file1 file2 ADD/CON][-y file1][-r file1][-b file1][-h file1 byte_count]", argv[0]);
+	 		printf("\nFormat : %s [-c file1 file2 ADD/CON][-y file1][-r file1][-b file1][-h file1 byte_count]", argv[0]);
 			printf("\n\nOptions : ");
 			printf("\n\n[-c] \t - \t Compare 2 Intel Hex Binary files based on address and contents or only contents. \n");
 			printf("\n\n[-y] \t - \t Calculate the Cyclic Redundancy Check of one Intel Hex Binary file. \n");
@@ -158,17 +158,17 @@ int main(int argc, char *argv[]) // argc -> argument count and argv -> argument 
 							  	   	   	if(argc == 5) // Number of arguments must be 4 [name_of_exe -c file1 file2] (4 arguments in total)
 							  	   	   	{
 										 		
-												if(strcmp(argv[4],"ADD"))
+												if(strcmp(argv[4],"ADD")==0)
 												{
 													compare_a(argv[2],argv[3]);
 												}
-												else if(strcmp(argv[4],"CON"))
+												else if(strcmp(argv[4],"CON")==0)
 												{
 													compare_c(argv[2],argv[3]);
 												}
 												else
 												{
-													printf("Enter the correct format \nADD -> compare with the files based on addresses\nCON -> compare the files based on the contents");
+													printf("\nEnter the correct format \nADD -> compare with the files based on addresses\nCON -> compare the files based on the contents");
 												}
 									   	 }
 										else
@@ -259,7 +259,7 @@ void compare_c(char file1[], char file2[]) // compare only the contents(data) of
 					rt = hex(fgetc(nf))*16 + hex(fgetc(nf));
 					for(j=0;j<bc;++j)
 					{
-					 	comp_data[j1++] = hex(fgetc(nf)) * 16 + hex(fgetc(nf));		 
+					 	comp_data[j1++] = hex(fgetc(nf)) * 16 + hex(fgetc(nf));		// Store the contents of the file1 in comp_data1 array and the contents of the file2 in the comp_data2 array 
 				    }
 					
 				 	cs = hex(fgetc(nf))*16 + hex(fgetc(nf));
