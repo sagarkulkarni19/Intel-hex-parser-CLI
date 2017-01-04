@@ -1,19 +1,91 @@
 #include<stdio.h>
 #include<string.h>
-void search(char [], char[]);
-void compare_a(char [], char []);
-void compare_c(char [], char []);
-void verify(char []);
-void convert(char [],char []);
+
+void search(char [], char[]); 
+/* 
+Search if a given string is present in the given input Hex file
+Input arguments : Filename and the string to be searched
+Output : 
+		whether string is present in file or not.
+		if present, then at what byte it is present.
+*/
+void compare_c(char [], char []); 
+/*
+ compares the contents of two hex files as input and displays if the two files are equivalent
+Input  arguments: Two Intel Hex format filenames
+Output : 
+		if content is equal
+			display The files are identical
+		else if contents are not equal
+			display byte number at which the characters are different
+ */
+void verify(char []); 
+/*
+verifies whether the Input file is in Intel Hex file format 
+Input  arguments: One Intel hex filename
+Output :
+		Display whether it is in Intel Hex file format or not.
+			(Display if there is a checksum error)
+*/
+void convert(char [],char []); 
+/*
+Converts the records of an Intel hex file to a different set of records with a max byte count restriction and displays them
+Input arguments: Intel Hex filename and max byte count
+Output : Records with a set max byte count
+*/
 void crc(char []);
-void returnbin(int [], int);
+/*
+Displays the 8-bit CRC of the contents(Data) of the file 
+Input arguments: Filename with Intel Hex records
+Output : Display CRC is binary and Hexadecimal format
+*/
 void convert_to_binary(char []);
+/*
+Convert the contents of an input Intel Hex file into a binary data
+Input arguments: An Intel Hex filename
+Output : Display the contents of the file converted into binary digits
+*/
 void convert_to_hex(char [], int);
+/*
+Converts the contents of a binary file into Intel Hex records with incremental addresses with max byte count given(only 16/32 bytes)
+Input arguments: A binary filename and size(16/32 bytes)
+Output : Display the records in Intel Hex format with given max byte count
+*/
 int checksum(int [], int size, int cs);
+/*
+Calculates the checksum of the Intel Hex record and compare it with the checksum already present in the record to check if there
+is a check sum error.
+Input arguments: Integer array of (byte count, address, record type and data) , size of the record( byte count + 4) , already present checksum in the record
+ *4+byte count is sent for check sum calculation as byte count, address(2) and record type is also included in the calculation of the check sum*
+Output : 
+			if calculated checksum is equal to checksum in the record
+				return 0
+			else
+				display 'Checksum error'
+					return 1;					
+*/
 int ret_checksum(int [],int);
-char get_c(char []);
-int hex(char);
-int comp_data[10000], bin_data[8000];
+/*
+Calculates the checksum of the Intel Hex record and return it.
+Input arguments: Integer array of (byte count, address, record type and data) , size of the record( byte count + 4)  
+*4+byte count is sent for check sum calculation as byte count, address(2) and record type is also included in the calculation of the check sum*
+Output :
+		Returns the checksum of the record	
+*/
+char get_c(char []); 
+/*
+returns character at position 1 in the character array
+*/
+int hex(char); 
+/*
+returns the decimal as an integer data type given a hexadecimal character
+*/
+
+/*
+ASSUMPTIONS :
+1. Max number of records per file is 100
+*/
+int comp_data[25500], bin_data[204000]; // Max size of a record is 255 bytes  and max number of records per file is assumed to be 100.
 int flag =0;
 struct student
 {
@@ -22,62 +94,14 @@ struct student
  	   int age;
 }s[100];
 
-struct dat
+struct dat // used in the function compare_c()
 {
  	   int size;
  	   int address;
  	   int data[1000];
+	   	
  	   
- 	   void display()
- 	   {
-	   		int i;
-	   		printf("\nThe address is : %04X \n Size = %02X \n DATA : \n", address, size);
-				for(i=0;i<size;++i)
-				{
-					printf("%02X", data[i]);
-				}
-			printf("\n");
-	   	}
- 	   
-}one[100], two[100];
-struct intel_hex_record
-{
- 	   int size;
- 	   int address;
- 	   int add1;// used for check sum
- 	   int add2;// used for check sum 
-	   int record_type;
- 	   int data[256];
- 	   int check_sum;
- 	   
- 	   void display()
- 	   {
-	   		int i=0;
-	   		printf("\n SIZE : %02X \n ADDRESS : %04X \n RECORD TYPE : %02X \n DATA : \n ", size, address, record_type);
-	   		for(i=0;i<size;++i)
-	   		{
-	    		  printf(" %02X ",data[i]);
-	        }
-			printf("\n CHECK SUM : %02X", check_sum);				   
-    	}
-  		void print_hex_format()
-  		{
-		 	int i;
-		 	printf(":%02X%04X%02X", size, address, record_type);
-		    for(i=0;i<size;++i)
-				  printf("%02X", data[i]);
-			printf("%02X", check_sum);  				  
-        }
-        void print_data()
-		{
-		 	 int i;
-		 	 for(i=0;i<size;++i)
-		 	 {
- 					printf("%02X", data[i]);
-   			 }
-	    }
-        
-}record[100], new_record[100];
+}one[100], two[100]; // Assumtion : Max 100 records in each file
 
 int main(int argc, char *argv[]) // argc -> argument count and argv -> argument values
 {
@@ -186,7 +210,7 @@ char get_c(char x[]) // removes '-' from the string which represents the options
  	return x[1];
 }
 
-int hex(char c)
+int hex(char c) // returns the decimal values(as an integer) from the input hexadecimal character
 {
  	int res =0 ;
  	if(c >= '0' && c <='9')
@@ -275,7 +299,7 @@ void compare_c(char file1[], char file2[]) // compare only the contents(data) of
 	 }
 	 fclose(nf);
 	 FILE *nf1 = fopen(file2 ,"r");
-  	 while(1) // Store onyl the contents(data) of file 2 in comp_data2[] array
+  	 while(1) // Store only the contents(data) of file 2 in comp_data2[] array
  	 {
 					c = fgetc(nf1);
 					bc = hex(fgetc(nf1)) * 16 + hex(fgetc(nf1));
@@ -322,12 +346,9 @@ void compare_c(char file1[], char file2[]) // compare only the contents(data) of
 }
   
 
-void verify(char file[])
+void verify(char file[]) // verifies whether the file is in the Intel Hex file format
 { 	
- 	int n, j;
-	
-	printf("\n");
-
+ 	int j;
 	int data[256];
 	int check[267]; // (max data size) + 11(header length + check sum)
 	char c;
@@ -383,12 +404,12 @@ void verify(char file[])
 							 int size = 4 + bc;
 							 int cs_verify = checksum(check,size,cs);  // checksum() returns 0 if the calculated checksum is equal to the checksum of the record
 	
-							 if(cs_verify !=0)
-							 {
+							if(cs_verify !=0)
+							{
 				 					  printf("\nCheck sum error, the record is corrupt \n");
 									  flag=1;
 				 					  break;
-				 			  }
+				 			}
 				
 								lf = fgetc(nf);
 					  
@@ -422,7 +443,7 @@ void verify(char file[])
  	 
 }
 
-void crc(char file[])
+void crc(char file[]) // Display the 8-bit CRC ( Cyclic Redundancy Check) of the contents in the file in binary and hexadecimal format 
 {
  	 FILE *nf = fopen(file,"r");
 	 char c;
@@ -453,19 +474,15 @@ void crc(char file[])
 				    				   }
 			  		   		 
 	 }
-	 returnbin(comp_data, j1);
 	 
-}
-void returnbin(int x[], int size)
-{
  	 int ans[1000][8];
  	 int x1 =0;
- 	 int n, j, i, k;
-		for( k=0;k<size;++k)             // Convert each element of the array into an eight bit binary sequence 
+ 	 int n;
+		for( k=0;k<j1;++k)             // Convert each element of the array into an eight bit binary sequence 
 		{
 			for( i=0;i<8;++i)
 			{
-				if(x[k]%2==0)
+				if(comp_data[k]%2==0)
 				{
 					ans[k][7-i]= 0;   
 				}	 
@@ -473,7 +490,7 @@ void returnbin(int x[], int size)
 					ans[k][7-i] = 1;
 		
 		
-			x[k] = x[k]/2;	    
+			comp_data[k] = comp_data[k]/2;	    
 			}
 			for(n=0;n<8;++n)
 			{
@@ -520,12 +537,12 @@ void returnbin(int x[], int size)
 	 for(i=0;i<8;++i)
 	 printf("%i ",crc[i]); 
  
-	int c1 = crc[0]*2*2*2 + crc[1]*2*2 + crc[2]*2 + crc[3];
-	int c2 = crc[4]*2*2*2 + crc[5]*2*2 + crc[6]*2 + crc[7];
+	 c1 = crc[0]*2*2*2 + crc[1]*2*2 + crc[2]*2 + crc[3];
+	 c2 = crc[4]*2*2*2 + crc[5]*2*2 + crc[6]*2 + crc[7];
 	printf("\nCRC in HEX : %01X%01X",c1,c2);
 	
 }
-void convert_to_binary(char filename[])
+void convert_to_binary(char filename[]) // converts the contents of the given Intel hex file to  
 {
 	 FILE *nf = fopen(filename ,"r");
 	 char c;
@@ -746,8 +763,8 @@ void convert(char file[], char s[]) // convert the Intel Hex file to another Int
 		    printf("%02X",ret_checksum(check,4+tot));
 		}	    
 }
-void search(char filename[], char s[])
-{// search and check if the given string s is present in the file 
+void search(char filename[], char s[]) // search and check if the given string s is present in the Intel hex file 
+{
 	int i=0, j=0, flag=0;
 	int c, bc, c1, c2, c3, c4, add, rt, comp_data[1000], cs, lf, j1=0;
 	FILE *nf = fopen(filename,"r");
