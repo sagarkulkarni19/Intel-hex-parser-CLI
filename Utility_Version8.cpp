@@ -87,27 +87,20 @@ ASSUMPTIONS :
 */
 int comp_data[25500], bin_data[204000]; // Max size of a record is 255 bytes  and max number of records per file is assumed to be 100.
 int flag =0;
-struct student
-{
- 	   int stud_number;
- 	   char name[100];
- 	   int age;
-}s[100];
 
 struct dat // used in the function compare_c()
 {
  	   int size;
  	   int address;
  	   int data[1000];
-	   	
- 	   
+	   		   
 }one[100], two[100]; // Assumtion : Max 100 records in each file
 
 int main(int argc, char *argv[]) // argc -> argument count and argv -> argument values
 {
  	if(argc == 1)
  	{
-	 		printf("\nFormat : %s [-c file1 file2 ][-y file1][-r file1][-b file1][-h file1 byte_count][-s filename string]", argv[0]);
+	 		printf("\nFormat : %s [-c file1 file2 ][-y file1][-r file1][-b file1][-h file1 byte_count][-v file1 max_byte_count][-s filename string]", argv[0]);
 			printf("\n\nOptions : ");
 			printf("\n\n[-c] \t - \t Compare 2 Intel Hex Binary files based on contents(data) present in the file. \n");
 			printf("\n\n[-y] \t - \t Calculate the Cyclic Redundancy Check of one Intel Hex Binary file. \n");
@@ -187,7 +180,7 @@ int main(int argc, char *argv[]) // argc -> argument count and argv -> argument 
 											convert(argv[2],argv[3]);
 										}
 										else
-											printf("\nUse the correct format [-v max byte count file1] \n");
+											printf("\nUse the correct format [-v file1 max_byte_count] \n");
 										break;
 							case 's' : 
 										if(argc==4)
@@ -234,7 +227,7 @@ int checksum(int dat[], int size, int cs) // calculate the check_sum value of th
 	p1= sum%16;  
 	sum = sum/16;
 	p2 = sum%16;
-	check_sum = 255 - (p2*16 + p1 ) + 1; // 2s complement for hexadecimal values
+	check_sum = 255 - (p2*16 + p1 ) + 1; // two's complement for hexadecimal values
 	p1 = check_sum %16;
 	check_sum = check_sum/16;
 	p2 = check_sum %16;
@@ -508,7 +501,7 @@ void crc(char file[]) // Display the 8-bit CRC ( Cyclic Redundancy Check) of the
 	 for(i=0;i<8;++i)
 	 crc[i] = bin_data[i];
  
-	 for(i=0;i<x1;++i) // Calculating the CRC
+	 for(i=0;i<x1;++i) // Calculating the CRC using XOR division
 	 {	  				
 	  	  if(crc[0]==1)
 		  {
@@ -542,7 +535,7 @@ void crc(char file[]) // Display the 8-bit CRC ( Cyclic Redundancy Check) of the
 	printf("\nCRC in HEX : %01X%01X",c1,c2);
 	
 }
-void convert_to_binary(char filename[]) // converts the contents of the given Intel hex file to  
+void convert_to_binary(char filename[]) // converts the contents of the given Intel hex file to  binary data
 {
 	 FILE *nf = fopen(filename ,"r");
 	 char c;
@@ -595,7 +588,7 @@ void convert_to_binary(char filename[]) // converts the contents of the given In
 
 }
 
-void convert_to_hex(char filename[], int bc) // filename and byte count (16bytes / 32 Bytes)
+void convert_to_hex(char filename[], int bc) // Converts the contents of a binary file into Intel Hex records with incremental addresses with max byte count given(only 16/32 bytes) 
 {
 	FILE *nf = fopen(filename,"r");
 	int a[8]; 
@@ -780,7 +773,7 @@ void search(char filename[], char s[]) // search and check if the given string s
 					rt = hex(fgetc(nf))*16 + hex(fgetc(nf));
 					for(j=0;j<bc;++j)
 					{
-					 	comp_data[j1++] = hex(fgetc(nf)) * 16 + hex(fgetc(nf));		// Ignore Everything but the contents of the file as we only need to search the contents
+					 	comp_data[j1++] = hex(fgetc(nf)) * 16 + hex(fgetc(nf));		// Ignore Everything but the contents of the file as we only need to search the data in the file
 				    }
 				 	cs = hex(fgetc(nf))*16 + hex(fgetc(nf));
 				 	lf = fgetc(nf);   
@@ -789,12 +782,11 @@ void search(char filename[], char s[]) // search and check if the given string s
 	   				   break;
 			        }
 	}
-	 i=0;
-	 j=0;
-	 flag=0;
-	for(i=0;i<j1;++i)
+	i=0;
+	j=0;
+	flag=0;
+	for(i=0;i<j1;++i) // Simple brute force string searching 
 	{
-		
 		if(comp_data[i]==(int)s[0])
 		for(j=0;j<strlen(s);++j)
 		{
