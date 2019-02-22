@@ -16,6 +16,7 @@ Options:
 [-c]     - Compare 2 Intel Hex Binary files based on only the contents in each file.
 
 	Input: [Name_of_exe -c file1 file2] 
+	
         Output:
 		Scenario 1: The files are Identical.
 		Scenario 2: The files are not identical as data at byte 'x' is different.
