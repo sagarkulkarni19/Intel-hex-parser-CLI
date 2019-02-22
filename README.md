@@ -8,7 +8,6 @@ Steps to compile:
 - make 
 - ./main [-(options)] [filname1 filename2...]
 
-### This tool can be used to perform certain tasks on Intel Hex files:
 
 Usage: **[Name_of_exe] [-c file1 file2] [-y file1] [-r file1] [-b file1] [-h file1 byte_count] [-v file1 max_byte_count] [-s file1 string]**
 (Name of exe in our case is output.exe[when using make, ./main will be the compiled file])
