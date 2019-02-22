@@ -24,4 +24,4 @@ complex.o:  complex.cpp complex.h simple.h
 	$(CC) $(CFLAGS) -c complex.cpp 
 
 clean: 
-	$(RM) count *.o *~
+	$(RM) main *.o *~
