@@ -14,10 +14,14 @@ Usage: [Name_of_exe] [-c file1 file2] [-y file1] [-r file1] [-b file1] [-h file1
 Options:
 
 [-c]     - Compare 2 Intel Hex Binary files based on only the contents in each file.
+			     
 			     Input: [Name_of_exe -c file1 file2] 
-           Output:
-				      Scenario 1: The files are Identical.
-              Scenario 2: The files are not identical as data at byte 'x' is different.
+           
+	   Output:
+	
+	Scenario 1: The files are Identical.
+        
+	Scenario 2: The files are not identical as data at byte 'x' is different.
 		
 [-y]     - Calculate the Cyclic Redundancy Check of one Intel Hex Binary file.
 			     Input: [Name_of_exe -y file1]
