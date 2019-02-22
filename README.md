@@ -17,8 +17,8 @@ Options:
 
 	Input: [Name_of_exe -c file1 file2] 
         Output:
-	Scenario 1: The files are Identical.
-	Scenario 2: The files are not identical as data at byte 'x' is different.
+		Scenario 1: The files are Identical.
+		Scenario 2: The files are not identical as data at byte 'x' is different.
 		
 [-y]     - Calculate the Cyclic Redundancy Check of one Intel Hex Binary file.
 			     Input: [Name_of_exe -y file1]
