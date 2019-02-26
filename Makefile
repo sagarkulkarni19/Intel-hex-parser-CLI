@@ -1,6 +1,6 @@
 #
 # This is an example Makefile for Intel-Hex-utility program.  This
-# program uses both the scanner simple and a complex file.
+# program uses both the simple and a complex file.
 # Typing 'make' or 'make main' will create the executable file.
 #
 #  -g    adds debugging information to the executable file
