@@ -5,7 +5,7 @@ Information about the tool:
 -	The tool is written using C++ and compiled using the G++ compiler. 
 
 Steps to compile:
-- make 
+- make [Windows users can download Cygwin64 and install make through that]
 - ./main [-(options)] [filname1 filename2...]
 
 ------------------------
